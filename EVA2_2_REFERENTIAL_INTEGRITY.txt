@@ -1,0 +1,444 @@
+EVA2_2_REFERENTIAL_INTEGRITY
+Copyright (c) 2016, 2022, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+ MySQL  SQL > \connect --mc root@localhost:3308
+Creating a Classic session to 'root@localhost:3308'
+Please provide the password for 'root@localhost:3308': ****
+Save password for 'root@localhost:3308'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 8
+Server version: 8.0.31 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3308 ssl  SQL > show databases;
++--------------------+
+| Database           |
++--------------------+
+| agencia            |
+| credit_cards       |
+| equis              |
+| eva_2              |
+| evaluacion_1       |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+11 rows in set (0.0132 sec)
+ MySQL  localhost:3308 ssl  SQL > \use eva_2
+Default schema set to `eva_2`.
+Fetching global names, object names from `eva_2` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3308 ssl  eva_2  SQL > show tables;
++-----------------+
+| Tables_in_eva_2 |
++-----------------+
+| detalle_factura |
+| factura         |
++-----------------+
+2 rows in set (0.0023 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > desc factura;
++------------+------+------+-----+---------+----------------+
+| Field      | Type | Null | Key | Default | Extra          |
++------------+------+------+-----+---------+----------------+
+| id         | int  | NO   | PRI | NULL    | auto_increment |
+| id_cliente | int  | NO   |     | NULL    |                |
++------------+------+------+-----+---------+----------------+
+2 rows in set (0.0038 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > show create table factura;
++---------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table   | Create Table
+                                                                                        |
++---------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| factura | CREATE TABLE `factura` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_cliente` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++---------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.0218 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > show create table detalle_factura;
++-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table           | Create Table
+
+
+                                                                    |
++-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| detalle_factura | CREATE TABLE `detalle_factura` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_factura` int DEFAULT NULL,
+  `id_producto` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_factura` (`id_factura`),
+  CONSTRAINT `detalle_factura_ibfk_1` FOREIGN KEY (`id_factura`) REFERENCES `factura` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.0020 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > create table maestro(id int auto_increment key, dato varchar(20);
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+ MySQL  localhost:3308 ssl  eva_2  SQL > create table maestro(id int auto_increment key, dato varchar(20));
+Query OK, 0 rows affected (0.0694 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > desc table maestro:
+                                      -> ;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ':' at line 1
+ MySQL  localhost:3308 ssl  eva_2  SQL > desc table maestro;
++----+-------------+---------+------------+------+---------------+------+---------+------+------+----------+-------+
+| id | select_type | table   | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra |
++----+-------------+---------+------------+------+---------------+------+---------+------+------+----------+-------+
+|  1 | SIMPLE      | maestro | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    1 |      100 | NULL  |
++----+-------------+---------+------------+------+---------------+------+---------+------+------+----------+-------+
+1 row in set, 1 warning (0.0133 sec)
+Note (code 1003): /* select#1 */ select `eva_2`.`maestro`.`id` AS `id`,`eva_2`.`maestro`.`dato` AS `dato` from `eva_2`.`maestro`
+ MySQL  localhost:3308 ssl  eva_2  SQL > delete maestro;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+ MySQL  localhost:3308 ssl  eva_2  SQL > delete table maestro;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table maestro' at line 1
+ MySQL  localhost:3308 ssl  eva_2  SQL > desc maestro;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int         | NO   | PRI | NULL    | auto_increment |
+| dato  | varchar(20) | YES  |     | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.0034 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > create table detalle(id int key not null, id_maestro int, dato varchar(20),
+                                      -> foreign key(id_maestro)
+                                      -> reference maestro(id)
+                                      -> on delete set null
+                                      -> on update cascade);
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'reference maestro(id)
+on delete set null
+on update cascade)' at line 3
+ MySQL  localhost:3308 ssl  eva_2  SQL > create table detalle(id int key not null, id_maestro int, dato varchar(20), foreign key(id_maestro) references maestro(id) on delete set null on update cascade);
+Query OK, 0 rows affected (0.0564 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > show create table detalle;
++---------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table   | Create Table
+
+
+            |
++---------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| detalle | CREATE TABLE `detalle` (
+  `id` int NOT NULL,
+  `id_maestro` int DEFAULT NULL,
+  `dato` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_maestro` (`id_maestro`),
+  CONSTRAINT `detalle_ibfk_1` FOREIGN KEY (`id_maestro`) REFERENCES `maestro` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++---------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.0031 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into detalle(id_maestro, dato)
+                                      -> values(5,'algo');
+ERROR: 1364 (HY000): Field 'id' doesn't have a default value
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into maestro(nombre) values('algo');
+ERROR: 1054 (42S22): Unknown column 'nombre' in 'field list'
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into maestro(dato) values('algo');
+Query OK, 1 row affected (0.0151 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into maestro(dato) values('algo2');
+Query OK, 1 row affected (0.0122 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into maestro(dato) values('algo3');
+Query OK, 1 row affected (0.0126 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into maestro(dato) values('algo4');
+Query OK, 1 row affected (0.0126 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > select * from maestro;
++----+-------+
+| id | dato  |
++----+-------+
+|  1 | algo  |
+|  2 | algo2 |
+|  3 | algo3 |
+|  4 | algo4 |
++----+-------+
+4 rows in set (0.0009 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into detalle(id_maestro, dato) values(5,'algo');
+ERROR: 1364 (HY000): Field 'id' doesn't have a default value
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into detalle(id,id_maestro, dato) values(1,5,'xd');
+ERROR: 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`eva_2`.`detalle`, CONSTRAINT `detalle_ibfk_1` FOREIGN KEY (`id_maestro`) REFERENCES `maestro` (`id`) ON DELETE SET NULL ON UPDATE CASCADE)
+ MySQL  localhost:3308 ssl  eva_2  SQL > desc detalle;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| id         | int         | NO   | PRI | NULL    |       |
+| id_maestro | int         | YES  | MUL | NULL    |       |
+| dato       | varchar(20) | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+3 rows in set (0.0030 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into detalle(id,dato) values(1,'xd');
+Query OK, 1 row affected (0.0132 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into detalle(id,dato) values(1,'xd2');
+ERROR: 1062 (23000): Duplicate entry '1' for key 'detalle.PRIMARY'
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into detalle(id,dato) values(2,'xd2');
+Query OK, 1 row affected (0.0126 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into detalle(id,dato) values(3,'xd3');
+Query OK, 1 row affected (0.0134 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into detalle(id,dato) values(4,'xd4');
+Query OK, 1 row affected (0.0122 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > select * from detalle;
++----+------------+------+
+| id | id_maestro | dato |
++----+------------+------+
+|  1 |       NULL | xd   |
+|  2 |       NULL | xd2  |
+|  3 |       NULL | xd3  |
+|  4 |       NULL | xd4  |
++----+------------+------+
+4 rows in set (0.0011 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > show create table detalle;
++---------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table   | Create Table
+
+
+            |
++---------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| detalle | CREATE TABLE `detalle` (
+  `id` int NOT NULL,
+  `id_maestro` int DEFAULT NULL,
+  `dato` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_maestro` (`id_maestro`),
+  CONSTRAINT `detalle_ibfk_1` FOREIGN KEY (`id_maestro`) REFERENCES `maestro` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++---------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.0014 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > alter table detalle
+                                      -> ;
+Query OK, 0 rows affected (0.0133 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > selec * from maestro;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'selec * from maestro' at line 1
+ MySQL  localhost:3308 ssl  eva_2  SQL > select * from maestro;
++----+-------+
+| id | dato  |
++----+-------+
+|  1 | algo  |
+|  2 | algo2 |
+|  3 | algo3 |
+|  4 | algo4 |
++----+-------+
+4 rows in set (0.0008 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > alter table detalle
+                                      -> ;
+Query OK, 0 rows affected (0.0118 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > update mestro
+                                      -> set id=6
+                                      -> where id=2;
+ERROR: 1146 (42S02): Table 'eva_2.mestro' doesn't exist
+ MySQL  localhost:3308 ssl  eva_2  SQL > update maestro  set id=6 where id=2;
+Query OK, 1 row affected (0.0139 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+ MySQL  localhost:3308 ssl  eva_2  SQL > select * from maestro;
++----+-------+
+| id | dato  |
++----+-------+
+|  1 | algo  |
+|  3 | algo3 |
+|  4 | algo4 |
+|  6 | algo2 |
++----+-------+
+4 rows in set (0.0009 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > select * from maestro;
++----+-------+
+| id | dato  |
++----+-------+
+|  1 | algo  |
+|  3 | algo3 |
+|  4 | algo4 |
+|  6 | algo2 |
++----+-------+
+4 rows in set (0.0008 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > select * from detalle;
++----+------------+------+
+| id | id_maestro | dato |
++----+------------+------+
+|  1 |       NULL | xd   |
+|  2 |       NULL | xd2  |
+|  3 |       NULL | xd3  |
+|  4 |       NULL | xd4  |
++----+------------+------+
+4 rows in set (0.0009 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > update detalle
+                                      -> set id=1
+                                      -> where id_maestro =2;
+Query OK, 0 rows affected (0.0014 sec)
+
+Rows matched: 0  Changed: 0  Warnings: 0
+ MySQL  localhost:3308 ssl  eva_2  SQL > create table contacts(contact_id int auto_increment kay, name varchar(20), company varchar(20), address int, zipcode int);
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'kay, name varchar(20), company varchar(20), address int, zipcode int)' at line 1
+ MySQL  localhost:3308 ssl  eva_2  SQL > create table contacts(contact_id int auto_increment key, name varchar(20), company varchar(20), address int, zipcode int);
+Query OK, 0 rows affected (0.0299 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > create table phones(phone_id int auto_increment key,
+                                      -> contact_id int, phone int,
+                                      -> foreign key(contact_id)
+                                      -> references contacts(contact_id)
+                                      -> on delete cascade
+                                      -> on update cascade);
+Query OK, 0 rows affected (0.0553 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > desc contacts;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| contact_id | int         | NO   | PRI | NULL    | auto_increment |
+| name       | varchar(20) | YES  |     | NULL    |                |
+| company    | varchar(20) | YES  |     | NULL    |                |
+| address    | int         | YES  |     | NULL    |                |
+| zipcode    | int         | YES  |     | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+5 rows in set (0.0036 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > desc phones;
++------------+------+------+-----+---------+----------------+
+| Field      | Type | Null | Key | Default | Extra          |
++------------+------+------+-----+---------+----------------+
+| phone_id   | int  | NO   | PRI | NULL    | auto_increment |
+| contact_id | int  | YES  | MUL | NULL    |                |
+| phone      | int  | YES  |     | NULL    |                |
++------------+------+------+-----+---------+----------------+
+3 rows in set (0.0033 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into contact(name, company, address, zipcode)
+                                      -> values('Joe', 'ABC',123,12345);
+ERROR: 1146 (42S02): Table 'eva_2.contact' doesn't exist
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into contacts(name, company, address, zipcode) values('Joe', 'ABC',123,12345);
+Query OK, 1 row affected (0.0138 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into contacts(name, company, address, zipcode) values('Jane', 'xyz',456,14454);
+Query OK, 1 row affected (0.0130 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into contacts(name, company, address, zipcode) values('Cris', 'fde',466,14423);
+Query OK, 1 row affected (0.0495 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > select * from contacts;
++------------+------+---------+---------+---------+
+| contact_id | name | company | address | zipcode |
++------------+------+---------+---------+---------+
+|          1 | Joe  | ABC     |     123 |   12345 |
+|          2 | Jane | xyz     |     456 |   14454 |
+|          3 | Cris | fde     |     466 |   14423 |
++------------+------+---------+---------+---------+
+3 rows in set (0.0011 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > create table phones2(
+                                      -> phone_id int auto_increment key,
+                                      -> ;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 2
+ MySQL  localhost:3308 ssl  eva_2  SQL > show create table phones;
++--------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table  | Create Table
+
+
+                                     |
++--------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| phones | CREATE TABLE `phones` (
+  `phone_id` int NOT NULL AUTO_INCREMENT,
+  `contact_id` int DEFAULT NULL,
+  `phone` int DEFAULT NULL,
+  PRIMARY KEY (`phone_id`),
+  KEY `contact_id` (`contact_id`),
+  CONSTRAINT `phones_ibfk_1` FOREIGN KEY (`contact_id`) REFERENCES `contacts` (`contact_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++--------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.0026 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL >  
+
++--------------------+
+| Database           |
++--------------------+
+| agencia            |
+| credit_cards       |
+| equis              |
+| eva_2              |
+| evaluacion_1       |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+11 rows in set (0.0121 sec)
+ MySQL  localhost:3308 ssl  SQL > \use eva_2
+Default schema set to `eva_2`.
+Fetching global names, object names from `eva_2` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3308 ssl  eva_2  SQL > show tables;
++-----------------+
+| Tables_in_eva_2 |
++-----------------+
+| contacts        |
+| detalle         |
+| detalle_factura |
+| factura         |
+| maestro         |
+| phones          |
++-----------------+
+6 rows in set (0.0042 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > desc phones
+                                      -> ;
++------------+------+------+-----+---------+----------------+
+| Field      | Type | Null | Key | Default | Extra          |
++------------+------+------+-----+---------+----------------+
+| phone_id   | int  | NO   | PRI | NULL    | auto_increment |
+| contact_id | int  | YES  | MUL | NULL    |                |
+| phone      | int  | YES  |     | NULL    |                |
++------------+------+------+-----+---------+----------------+
+3 rows in set (0.0032 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > inser into phones(contact_id, phone)
+                                      -> values(1,12345);
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'inser into phones(contact_id, phone)
+values(1,12345)' at line 1
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into phones(contact_id, phone) values(1,12345);
+Query OK, 1 row affected (0.0239 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into phones(contact_id, phone) values(2,456123);
+Query OK, 1 row affected (0.0125 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into phones(contact_id, phone) values(3,464556454);
+Query OK, 1 row affected (0.0021 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into phones(contact_id, phone) values(4,56454);
+ERROR: 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`eva_2`.`phones`, CONSTRAINT `phones_ibfk_1` FOREIGN KEY (`contact_id`) REFERENCES `contacts` (`contact_id`) ON DELETE CASCADE ON UPDATE CASCADE)
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into phones(contact_id, phone) values(1,5622654);
+Query OK, 1 row affected (0.0121 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into phones(contact_id, phone) values(1,4444454);
+Query OK, 1 row affected (0.0124 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into phones(contact_id, phone) values(3,656656454);
+Query OK, 1 row affected (0.0126 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > select * from phones;
++----------+------------+-----------+
+| phone_id | contact_id | phone     |
++----------+------------+-----------+
+|        1 |          1 |     12345 |
+|        2 |          2 |    456123 |
+|        3 |          3 | 464556454 |
+|        5 |          1 |   5622654 |
+|        6 |          1 |   4444454 |
+|        7 |          3 | 656656454 |
++----------+------------+-----------+
+6 rows in set (0.0009 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > desc phones;
++------------+------+------+-----+---------+----------------+
+| Field      | Type | Null | Key | Default | Extra          |
++------------+------+------+-----+---------+----------------+
+| phone_id   | int  | NO   | PRI | NULL    | auto_increment |
+| contact_id | int  | YES  | MUL | NULL    |                |
+| phone      | int  | YES  |     | NULL    |                |
++------------+------+------+-----+---------+----------------+
+3 rows in set (0.0033 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > select * from contacts;
++------------+------+---------+---------+---------+
+| contact_id | name | company | address | zipcode |
++------------+------+---------+---------+---------+
+|          1 | Joe  | ABC     |     123 |   12345 |
+|          2 | Jane | xyz     |     456 |   14454 |
+|          3 | Cris | fde     |     466 |   14423 |
++------------+------+---------+---------+---------+
+3 rows in set (0.0123 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > select * from phones;
++----------+------------+-----------+
+| phone_id | contact_id | phone     |
++----------+------------+-----------+
+|        1 |          1 |     12345 |
+|        2 |          2 |    456123 |
+|        3 |          3 | 464556454 |
+|        5 |          1 |   5622654 |
+|        6 |          1 |   4444454 |
+|        7 |          3 | 656656454 |
++----------+------------+-----------+
+6 rows in set (0.0008 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL >                                                                              
