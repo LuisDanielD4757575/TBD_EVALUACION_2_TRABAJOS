@@ -1,0 +1,529 @@
+EVA2_11_ROLES
+MySQL Shell 8.0.31
+
+Copyright (c) 2016, 2022, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+ MySQL  JS > \connect --mc root@localhost:
+Invalid URI: Missing port number
+ MySQL  JS > \connect --mc root@localhost:3308
+Creating a Classic session to 'root@localhost:3308'
+Please provide the password for 'root@localhost:3308': ****
+Save password for 'root@localhost:3308'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching schema names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 8
+Server version: 8.0.31 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3308 ssl  JS > \sql
+Switching to SQL mode... Commands end with ;
+Fetching global names for auto-completion... Press ^C to stop.
+ MySQL  localhost:3308 ssl  SQL > use eva_2
+Default schema set to `eva_2`.
+Fetching global names, object names from `eva_2` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3308 ssl  eva_2  SQL > show tables;
++-----------------+
+| Tables_in_eva_2 |
++-----------------+
+| contacts        |
+| detalle         |
+| detalle_factura |
+| factura         |
+| maestro         |
+| phones          |
+| tablaa          |
+| tablab          |
++-----------------+
+8 rows in set (0.0135 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > desc contacts;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| contact_id | int         | NO   | PRI | NULL    | auto_increment |
+| name       | varchar(20) | YES  |     | NULL    |                |
+| company    | varchar(20) | YES  |     | NULL    |                |
+| address    | int         | YES  |     | NULL    |                |
+| zipcode    | int         | YES  |     | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+5 rows in set (0.0033 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > select * from contacts;
++------------+------+---------+---------+---------+
+| contact_id | name | company | address | zipcode |
++------------+------+---------+---------+---------+
+|          1 | Joe  | ABC     |     123 |   12345 |
+|          2 | Jane | xyz     |     456 |   14454 |
+|          3 | Cris | fde     |     466 |   14423 |
++------------+------+---------+---------+---------+
+3 rows in set (0.0297 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > use sakila;
+Default schema set to `sakila`.
+Fetching global names, object names from `sakila` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3308 ssl  sakila  SQL > show tables;
++----------------------------+
+| Tables_in_sakila           |
++----------------------------+
+| actor                      |
+| actor_info                 |
+| address                    |
+| category                   |
+| city                       |
+| country                    |
+| customer                   |
+| customer_list              |
+| film                       |
+| film_actor                 |
+| film_category              |
+| film_list                  |
+| film_text                  |
+| inventory                  |
+| language                   |
+| nicer_but_slower_film_list |
+| payment                    |
+| rental                     |
+| sales_by_film_category     |
+| sales_by_store             |
+| staff                      |
+| staff_list                 |
+| store                      |
++----------------------------+
+23 rows in set (0.0028 sec)
+ MySQL  localhost:3308 ssl  sakila  SQL > desc customers;
+ERROR: 1146 (42S02): Table 'sakila.customers' doesn't exist
+ MySQL  localhost:3308 ssl  sakila  SQL > desc customer;
++-------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+| Field       | Type              | Null | Key | Default           | Extra                                         |
++-------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+| customer_id | smallint unsigned | NO   | PRI | NULL              | auto_increment                                |
+| store_id    | tinyint unsigned  | NO   | MUL | NULL              |                                               |
+| first_name  | varchar(45)       | NO   |     | NULL              |                                               |
+| last_name   | varchar(45)       | NO   | MUL | NULL              |                                               |
+| email       | varchar(50)       | YES  |     | NULL              |                                               |
+| address_id  | smallint unsigned | NO   | MUL | NULL              |                                               |
+| active      | tinyint(1)        | NO   |     | 1                 |                                               |
+| create_date | datetime          | NO   |     | NULL              |                                               |
+| last_update | timestamp         | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++-------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+9 rows in set (0.0033 sec)
+ MySQL  localhost:3308 ssl  sakila  SQL > create user 'prueba3'@'localhost' identified by 'pimpoyo';
+Query OK, 0 rows affected (0.0276 sec)
+ MySQL  localhost:3308 ssl  sakila  SQL > grant select(first_name, last_name)
+                                       -> on sakila.customer
+                                       -> to 'prueba3'@'localhost';
+Query OK, 0 rows affected (0.0268 sec)
+ MySQL  localhost:3308 ssl  sakila  SQL > \connect --mc prueba3@localhost:3308
+Creating a Classic session to 'prueba3@localhost:3308'
+Please provide the password for 'prueba3@localhost:3308': *******
+Save password for 'prueba3@localhost:3308'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching global names for auto-completion... Press ^C to stop.
+Error during auto-completion cache update: Access denied; you need (at least one of) the PROCESS privilege(s) for this operation
+Closing old connection...
+Your MySQL connection id is 9
+Server version: 8.0.31 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3308 ssl  SQL > \use eva_2
+MySQL Error 1044: Access denied for user 'prueba3'@'localhost' to database 'eva_2'
+ MySQL  localhost:3308 ssl  SQL > use sakila
+Default schema set to `sakila`.
+Fetching global names, object names from `sakila` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3308 ssl  sakila  SQL > show tables;
++------------------+
+| Tables_in_sakila |
++------------------+
+| customer         |
++------------------+
+1 row in set (0.0027 sec)
+ MySQL  localhost:3308 ssl  sakila  SQL > select * from customer limit 20;
+ERROR: 1143 (42000): SELECT command denied to user 'prueba3'@'localhost' for column 'customer_id' in table 'customer'
+ MySQL  localhost:3308 ssl  sakila  SQL > select first_name, last_name from customer limit 20;
++------------+-----------+
+| first_name | last_name |
++------------+-----------+
+| MARY       | SMITH     |
+| PATRICIA   | JOHNSON   |
+| LINDA      | WILLIAMS  |
+| BARBARA    | JONES     |
+| ELIZABETH  | BROWN     |
+| JENNIFER   | DAVIS     |
+| MARIA      | MILLER    |
+| SUSAN      | WILSON    |
+| MARGARET   | MOORE     |
+| DOROTHY    | TAYLOR    |
+| LISA       | ANDERSON  |
+| NANCY      | THOMAS    |
+| KAREN      | JACKSON   |
+| BETTY      | WHITE     |
+| HELEN      | HARRIS    |
+| SANDRA     | MARTIN    |
+| DONNA      | THOMPSON  |
+| CAROL      | GARCIA    |
+| RUTH       | MARTINEZ  |
+| SHARON     | ROBINSON  |
++------------+-----------+
+20 rows in set (0.0246 sec)
+ MySQL  localhost:3308 ssl  sakila  SQL > \connect --mc root@localhost:3308
+Creating a Classic session to 'root@localhost:3308'
+Please provide the password for 'root@localhost:3308': ****
+Save password for 'root@localhost:3308'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching global names for auto-completion... Press ^C to stop.
+Closing old connection...
+Your MySQL connection id is 10
+Server version: 8.0.31 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3308 ssl  SQL > use eva_s
+MySQL Error 1049: Unknown database 'eva_s'
+ MySQL  localhost:3308 ssl  SQL > use eva_2
+Default schema set to `eva_2`.
+Fetching global names, object names from `eva_2` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3308 ssl  eva_2  SQL > show tables;
++-----------------+
+| Tables_in_eva_2 |
++-----------------+
+| contacts        |
+| detalle         |
+| detalle_factura |
+| factura         |
+| maestro         |
+| phones          |
+| tablaa          |
+| tablab          |
++-----------------+
+8 rows in set (0.0022 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > desc phones;
++------------+------+------+-----+---------+----------------+
+| Field      | Type | Null | Key | Default | Extra          |
++------------+------+------+-----+---------+----------------+
+| phone_id   | int  | NO   | PRI | NULL    | auto_increment |
+| contact_id | int  | YES  | MUL | NULL    |                |
+| phone      | int  | YES  |     | NULL    |                |
++------------+------+------+-----+---------+----------------+
+3 rows in set (0.0020 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > desc contacts;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| contact_id | int         | NO   | PRI | NULL    | auto_increment |
+| name       | varchar(20) | YES  |     | NULL    |                |
+| company    | varchar(20) | YES  |     | NULL    |                |
+| address    | int         | YES  |     | NULL    |                |
+| zipcode    | int         | YES  |     | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+5 rows in set (0.0024 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > create user 'prueba4'@'localhost'
+                                      -> ;
+Query OK, 0 rows affected (0.0161 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > alter user 'prueba4'@'localhost' identified by 'pimpoyito';
+Query OK, 0 rows affected (0.0077 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > grant select(name), insert(name), update(name, company, address, zipcode)
+                                      -> on eva_2.contacts to 'prueba4'@'localhost';
+Query OK, 0 rows affected (0.0145 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > \connect --mc prueba4@localhost:3308
+Creating a Classic session to 'prueba4@localhost:3308'
+Please provide the password for 'prueba4@localhost:3308': *******
+MySQL Error 1045 (28000): Access denied for user 'prueba4'@'localhost' (using password: YES)
+ MySQL  localhost:3308 ssl  eva_2  SQL > \connect --mc prueba4@localhost:3308
+Creating a Classic session to 'prueba4@localhost:3308'
+Please provide the password for 'prueba4@localhost:3308': *********
+Save password for 'prueba4@localhost:3308'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching global names for auto-completion... Press ^C to stop.
+Error during auto-completion cache update: Access denied; you need (at least one of) the PROCESS privilege(s) for this operation
+Closing old connection...
+Your MySQL connection id is 12
+Server version: 8.0.31 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3308 ssl  SQL > use eva_2
+Default schema set to `eva_2`.
+Fetching global names, object names from `eva_2` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3308 ssl  eva_2  SQL > show tables;
++-----------------+
+| Tables_in_eva_2 |
++-----------------+
+| contacts        |
++-----------------+
+1 row in set (0.0022 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > select * from contacts;
+ERROR: 1143 (42000): SELECT command denied to user 'prueba4'@'localhost' for column 'contact_id' in table 'contacts'
+ MySQL  localhost:3308 ssl  eva_2  SQL > select name from contacts;
++------+
+| name |
++------+
+| Joe  |
+| Jane |
+| Cris |
++------+
+3 rows in set (0.0007 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > desc contacts;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| name    | varchar(20) | YES  |     | NULL    |       |
+| company | varchar(20) | YES  |     | NULL    |       |
+| address | int         | YES  |     | NULL    |       |
+| zipcode | int         | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+4 rows in set (0.0026 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into contacts (name, company)
+                                      -> values('dsfdf','sdfsaef');
+ERROR: 1143 (42000): INSERT command denied to user 'prueba4'@'localhost' for column 'company' in table 'contacts'
+ MySQL  localhost:3308 ssl  eva_2  SQL > insert into contacts (name) values('Julieta');
+Query OK, 1 row affected (0.0035 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > select name from contacts;
++---------+
+| name    |
++---------+
+| Joe     |
+| Jane    |
+| Cris    |
+| Julieta |
++---------+
+4 rows in set (0.0006 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > update contacts
+                                      -> set name = 'Luisa'
+                                      -> where name = 'Julieta';
+Query OK, 1 row affected (0.0137 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+ MySQL  localhost:3308 ssl  eva_2  SQL > select name from contacts;
++-------+
+| name  |
++-------+
+| Joe   |
+| Jane  |
+| Cris  |
+| Luisa |
++-------+
+4 rows in set (0.0009 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > delete from contacts
+                                      -> where name = 'Luisa';
+ERROR: 1142 (42000): DELETE command denied to user 'prueba4'@'localhost' for table 'contacts'
+ MySQL  localhost:3308 ssl  eva_2  SQL > select user();
++-------------------+
+| user()            |
++-------------------+
+| prueba4@localhost |
++-------------------+
+1 row in set (0.0008 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > alter user user()
+                                      -> identified by 'pimpoyo';
+Query OK, 0 rows affected (0.0060 sec)
+ MySQL  localhost:3308 ssl  eva_2  SQL > \connect --mc prueba4@localhost:3308
+Creating a Classic session to 'prueba4@localhost:3308'
+Please provide the password for 'prueba4@localhost:3308': *******
+Save password for 'prueba4@localhost:3308'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching global names for auto-completion... Press ^C to stop.
+Error during auto-completion cache update: Access denied; you need (at least one of) the PROCESS privilege(s) for this operation
+Closing old connection...
+Your MySQL connection id is 13
+Server version: 8.0.31 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3308 ssl  SQL > \connect --mc root@localhost:3308
+Creating a Classic session to 'root@localhost:3308'
+Please provide the password for 'root@localhost:3308': ****
+Save password for 'root@localhost:3308'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching global names for auto-completion... Press ^C to stop.
+Closing old connection...
+Your MySQL connection id is 14
+Server version: 8.0.31 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3308 ssl  SQL > create user 'bloquear'@'localhost' identified by 'pimpoyo';
+Query OK, 0 rows affected (0.0196 sec)
+ MySQL  localhost:3308 ssl  SQL > alter user 'bloquear'@'localhost' failed_login_attempts 3;
+Query OK, 0 rows affected (0.0143 sec)
+ MySQL  localhost:3308 ssl  SQL > \connect --mc bloquear@localhost:3308
+Creating a Classic session to 'bloquear@localhost:3308'
+Please provide the password for 'bloquear@localhost:3308': *******
+Save password for 'bloquear@localhost:3308'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching global names for auto-completion... Press ^C to stop.
+Error during auto-completion cache update: Access denied; you need (at least one of) the PROCESS privilege(s) for this operation
+Closing old connection...
+Your MySQL connection id is 15
+Server version: 8.0.31 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3308 ssl  SQL > show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| performance_schema |
++--------------------+
+2 rows in set (0.0016 sec)
+ MySQL  localhost:3308 ssl  SQL > \connect --mc root@localhost:3308
+Creating a Classic session to 'root@localhost:3308'
+Please provide the password for 'root@localhost:3308': ****
+Save password for 'root@localhost:3308'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching global names for auto-completion... Press ^C to stop.
+Closing old connection...
+Your MySQL connection id is 16
+Server version: 8.0.31 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3308 ssl  SQL > \connect --mc bloquear@localhost:3308
+Creating a Classic session to 'bloquear@localhost:3308'
+Please provide the password for 'bloquear@localhost:3308': ********
+MySQL Error 1045 (28000): Access denied for user 'bloquear'@'localhost' (using password: YES)
+ MySQL  localhost:3308 ssl  SQL > \connect --mc bloquear@localhost:3308
+Creating a Classic session to 'bloquear@localhost:3308'
+Please provide the password for 'bloquear@localhost:3308': ********
+MySQL Error 1045 (28000): Access denied for user 'bloquear'@'localhost' (using password: YES)
+ MySQL  localhost:3308 ssl  SQL > \connect --mc bloquear@localhost:3308
+Creating a Classic session to 'bloquear@localhost:3308'
+Please provide the password for 'bloquear@localhost:3308': ********
+MySQL Error 1045 (28000): Access denied for user 'bloquear'@'localhost' (using password: YES)
+ MySQL  localhost:3308 ssl  SQL > \connect --mc bloquear@localhost:3308
+Creating a Classic session to 'bloquear@localhost:3308'
+Please provide the password for 'bloquear@localhost:3308': *******
+Save password for 'bloquear@localhost:3308'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching global names for auto-completion... Press ^C to stop.
+Error during auto-completion cache update: Access denied; you need (at least one of) the PROCESS privilege(s) for this operation
+Closing old connection...
+Your MySQL connection id is 20
+Server version: 8.0.31 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3308 ssl  SQL > \connect --mc root@localhost:3308
+Creating a Classic session to 'root@localhost:3308'
+Please provide the password for 'root@localhost:3308': ****
+Save password for 'root@localhost:3308'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching global names for auto-completion... Press ^C to stop.
+Closing old connection...
+Your MySQL connection id is 21
+Server version: 8.0.31 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3308 ssl  SQL > alter user 'bloquear'@'localhost'
+                               -> falied_login_attempts 3 password_lock_time 2;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'falied_login_attempts 3 password_lock_time 2' at line 2
+ MySQL  localhost:3308 ssl  SQL > alter user 'bloquear'@'localhost' failed_login_attempts 3 password_lock_time 2;
+Query OK, 0 rows affected (0.0146 sec)
+ MySQL  localhost:3308 ssl  SQL > \connect --mc bloquear@localhost:3308
+Creating a Classic session to 'bloquear@localhost:3308'
+Please provide the password for 'bloquear@localhost:3308': ******
+MySQL Error 1045 (28000): Access denied for user 'bloquear'@'localhost' (using password: YES)
+ MySQL  localhost:3308 ssl  SQL > \connect --mc bloquear@localhost:3308
+Creating a Classic session to 'bloquear@localhost:3308'
+Please provide the password for 'bloquear@localhost:3308': *****
+MySQL Error 1045 (28000): Access denied for user 'bloquear'@'localhost' (using password: YES)
+ MySQL  localhost:3308 ssl  SQL > \connect --mc bloquear@localhost:3308
+Creating a Classic session to 'bloquear@localhost:3308'
+Please provide the password for 'bloquear@localhost:3308': ******
+MySQL Error 3955 (HY000): Access denied for user 'bloquear'@'localhost'. Account is blocked for 2 day(s) (2 day(s) remaining) due to 3 consecutive failed logins.
+ MySQL  localhost:3308 ssl  SQL > \connect --mc bloquear@localhost:3308
+Creating a Classic session to 'bloquear@localhost:3308'
+Please provide the password for 'bloquear@localhost:3308': *******
+MySQL Error 3955 (HY000): Access denied for user 'bloquear'@'localhost'. Account is blocked for 2 day(s) (2 day(s) remaining) due to 3 consecutive failed logins.
+ MySQL  localhost:3308 ssl  SQL > \connect --mc root@localhost:3308
+Creating a Classic session to 'root@localhost:3308'
+Please provide the password for 'root@localhost:3308': ****
+Save password for 'root@localhost:3308'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching global names for auto-completion... Press ^C to stop.
+Closing old connection...
+Your MySQL connection id is 26
+Server version: 8.0.31 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3308 ssl  SQL > alter user 'bloquear'@'localhost'
+                               -> account unlock;
+Query OK, 0 rows affected (0.0121 sec)
+ MySQL  localhost:3308 ssl  SQL > \connect --mc bloquear@localhost:3308
+Creating a Classic session to 'bloquear@localhost:3308'
+Please provide the password for 'bloquear@localhost:3308': *******
+Save password for 'bloquear@localhost:3308'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching global names for auto-completion... Press ^C to stop.
+Error during auto-completion cache update: Access denied; you need (at least one of) the PROCESS privilege(s) for this operation
+Closing old connection...
+Your MySQL connection id is 27
+Server version: 8.0.31 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3308 ssl  SQL > \connect --mc root@localhost:3308
+Creating a Classic session to 'root@localhost:3308'
+Please provide the password for 'root@localhost:3308': ****
+Save password for 'root@localhost:3308'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching global names for auto-completion... Press ^C to stop.
+Closing old connection...
+Your MySQL connection id is 28
+Server version: 8.0.31 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3308 ssl  SQL > create role 'consultas';
+Query OK, 0 rows affected (0.0159 sec)
+ MySQL  localhost:3308 ssl  SQL > grant select on sakila.* to 'consultas';
+Query OK, 0 rows affected (0.0141 sec)
+ MySQL  localhost:3308 ssl  SQL > grant 'consultas' to 'bloquear'@'localhost';
+Query OK, 0 rows affected (0.0133 sec)
+ MySQL  localhost:3308 ssl  SQL > \connect --mc bloquear@localhost:3308
+Creating a Classic session to 'bloquear@localhost:3308'
+Please provide the password for 'bloquear@localhost:3308': *******
+Save password for 'bloquear@localhost:3308'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching global names for auto-completion... Press ^C to stop.
+Error during auto-completion cache update: Access denied; you need (at least one of) the PROCESS privilege(s) for this operation
+Closing old connection...
+Your MySQL connection id is 29
+Server version: 8.0.31 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3308 ssl  SQL > show databases:
+                               -> ;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ':' at line 1
+ MySQL  localhost:3308 ssl  SQL > show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| performance_schema |
++--------------------+
+2 rows in set (0.0015 sec)
+ MySQL  localhost:3308 ssl  SQL > \connect --mc root@localhost:3308
+Creating a Classic session to 'root@localhost:3308'
+Please provide the password for 'root@localhost:3308': ****
+Save password for 'root@localhost:3308'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching global names for auto-completion... Press ^C to stop.
+Closing old connection...
+Your MySQL connection id is 30
+Server version: 8.0.31 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3308 ssl  SQL > create user 'prueba5'@'localhost' identified by 'pimpoyo';
+Query OK, 0 rows affected (0.0170 sec)
+ MySQL  localhost:3308 ssl  SQL > grant 'consultas' to 'prueba5'@'localhost';
+Query OK, 0 rows affected (0.0129 sec)
+ MySQL  localhost:3308 ssl  SQL > \connect --mc prueba5@localhost:3308
+Creating a Classic session to 'prueba5@localhost:3308'
+Please provide the password for 'prueba5@localhost:3308': *******
+Save password for 'prueba5@localhost:3308'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching global names for auto-completion... Press ^C to stop.
+Error during auto-completion cache update: Access denied; you need (at least one of) the PROCESS privilege(s) for this operation
+Closing old connection...
+Your MySQL connection id is 31
+Server version: 8.0.31 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3308 ssl  SQL > \connect --mc root@localhost:3308
+Creating a Classic session to 'root@localhost:3308'
+Please provide the password for 'root@localhost:3308': ****
+Save password for 'root@localhost:3308'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching global names for auto-completion... Press ^C to stop.
+Closing old connection...
+Your MySQL connection id is 32
+Server version: 8.0.31 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3308 ssl  SQL > drop role 'consultas';
+Query OK, 0 rows affected (0.0426 sec)
+ MySQL  localhost:3308 ssl  SQL > create rolo 'consultas'@'localhost';
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rolo 'consultas'@'localhost'' at line 1
+ MySQL  localhost:3308 ssl  SQL > create role 'consultas'@'localhost';
+Query OK, 0 rows affected (0.0136 sec)
+ MySQL  localhost:3308 ssl  SQL > grant select on sakila.* to 'consultas'@'localhost';
+Query OK, 0 rows affected (0.0129 sec)
+ MySQL  localhost:3308 ssl  SQL > grant 'consultas'@'localhost' to 'prueba5'@'localhost';
+Query OK, 0 rows affected (0.0129 sec)
+ MySQL  localhost:3308 ssl  SQL > \connect --mc prueba5@localhost:3308
+Creating a Classic session to 'prueba5@localhost:3308'
+Please provide the password for 'prueba5@localhost:3308': *******
+Save password for 'prueba5@localhost:3308'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching global names for auto-completion... Press ^C to stop.
+Error during auto-completion cache update: Access denied; you need (at least one of) the PROCESS privilege(s) for this operation
+Closing old connection...
+Your MySQL connection id is 33
+Server version: 8.0.31 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3308 ssl  SQL > show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| performance_schema |
++--------------------+
+2 rows in set (0.0016 sec)
+ MySQL  localhost:3308 ssl  SQL >
